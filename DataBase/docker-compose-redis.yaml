@@ -1,0 +1,59 @@
+version: "3.9"
+services:
+  redis:
+    image: redis:7.2-rc3-bookworm
+    container_name: star_redis
+    # restart: unless-stopped
+    volumes:
+      - redis-data:/var/lib/redis
+    ports:
+      - "6379:6379"
+    command: [
+                "redis-server",
+                "--requirepass", "123",
+                "--appendonly", "yes",
+                "--maxmemory-policy", "allkeys-lru",
+                "--maxmemory", "4000mb",
+                "--save", "900", "1",
+                "--save", "300", "10",
+                "--save", "60", "10000",
+              ]
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli AUTH \"Redis@123\"", "redis-cli ping | grep PONG"]
+      interval: 1s
+      timeout: 3s
+      retries: 5
+    networks:
+      - redis-star
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: star_redis_commander
+    # restart: unless-stopped
+    ports:
+      - "6380:8081"
+    command: "node ./bin/redis-commander --redis-password 123 --redis-host redis --redis-port 6379"
+    networks:
+      - redis-star
+    depends_on:
+      redis:
+        condition: service_healthy
+
+networks:
+  redis-star:
+    driver: bridge
+
+volumes:
+  redis-data:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: "./redis_data"
+
+##############    Description   ###################
+###          :این یه دایرکتوری را ایجاد کنید  ### 
+###                                             ### 
+###     mkdir -p ./redis_data                   ###
+###                                             ###
+#############    Description   ####################           

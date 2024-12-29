@@ -1,0 +1,27 @@
+version: "3.9"
+services:
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: star_mssql
+    # restart: unless-stopped
+    environment:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: "!@#123qwe"
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssql-data:/var/opt/mssql/data
+    networks:
+      - star-mssql
+
+networks:
+  star-mssql:
+    driver: bridge
+
+volumes:
+  mssql-data:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: "./mssql_data"
