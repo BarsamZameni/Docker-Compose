@@ -78,57 +78,57 @@ networks:
 
     ##########################################################################
     ###############  If we want to set a password  ############################
-#services:
-  elasticsearch:
-    image: docker.arvancloud.ir/elasticsearch:8.14.3
-    container_name: elasticsearch
-    environment:
-      - node.name=es01
-      - discovery.type=single-node
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      - xpack.security.enabled=true
-      - xpack.monitoring.collection.enabled=true
-      - ELASTICSEARCH_USERNAME=elastic
-      - ELASTIC_PASSWORD=!@#123qwe
-      - xpack.security.authc.api_key.enabled=true
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    volumes:
-      - esdata:/usr/share/elasticsearch/data
-    ports:
-      - 9200:9200
-      - 9300:9300
-    restart: unless-stopped
+# #services:
+#   elasticsearch:
+#     image: docker.arvancloud.ir/elasticsearch:8.14.3
+#     container_name: elasticsearch
+#     environment:
+#       - node.name=es01
+#       - discovery.type=single-node
+#       - bootstrap.memory_lock=true
+#       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+#       - xpack.security.enabled=true
+#       - xpack.monitoring.collection.enabled=true
+#       - ELASTICSEARCH_USERNAME=elastic
+#       - ELASTIC_PASSWORD=!@#123qwe
+#       - xpack.security.authc.api_key.enabled=true
+#     ulimits:
+#       memlock:
+#         soft: -1
+#         hard: -1
+#     volumes:
+#       - esdata:/usr/share/elasticsearch/data
+#     ports:
+#       - 9200:9200
+#       - 9300:9300
+#     restart: unless-stopped
 
-  kibana:
-    image: docker.arvancloud.ir/kibana:8.14.3
-    container_name: kibana
-    environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-    ports:
-      - 5601:5601
-    depends_on:
-      - elasticsearch
-    restart: unless-stopped
+#   kibana:
+#     image: docker.arvancloud.ir/kibana:8.14.3
+#     container_name: kibana
+#     environment:
+#       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+#     ports:
+#       - 5601:5601
+#     depends_on:
+#       - elasticsearch
+#     restart: unless-stopped
 
-  filebeat:
-    image: elastic/filebeat:8.14.3
-    container_name: filebeat
-    user: root
-    volumes:
-      - ./filebeat/config/filebeat.yml:/usr/share/filebeat/filebeat.yml
-      - ./filebeat/logs:/var/log
-      - /var/lib/docker/containers:/var/lib/docker/containers:ro
-      - /var/run/docker.sock:/var/run/docker.sock
-    environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-    depends_on:
-      - elasticsearch
-    restart: unless-stopped
+#   filebeat:
+#     image: elastic/filebeat:8.14.3
+#     container_name: filebeat
+#     user: root
+#     volumes:
+#       - ./filebeat/config/filebeat.yml:/usr/share/filebeat/filebeat.yml
+#       - ./filebeat/logs:/var/log
+#       - /var/lib/docker/containers:/var/lib/docker/containers:ro
+#       - /var/run/docker.sock:/var/run/docker.sock
+#     environment:
+#       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+#     depends_on:
+#       - elasticsearch
+#     restart: unless-stopped
 
-#volumes:
-  esdata:
-    driver: local
+# #volumes:
+#   esdata:
+#     driver: local
